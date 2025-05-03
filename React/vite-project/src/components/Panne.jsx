@@ -1,6 +1,23 @@
-import React from 'react'
-
+import React,{useState,useEffect} from 'react'
+import axios from 'axios'
 const Panne = () => {
+    const [panne,setPanne] = useState([])
+    useEffect(()=>{
+        axios.get('http://127.0.0.1:8000/materielle/signalement-panne')
+        .then((res)=>{
+            if(res.data){
+                setPanne(res.data)
+            }
+            else{
+                setPanne([])
+            }
+            console.log(res.data)
+        })
+        .catch((err)=>{
+            console.log(err)
+            setPanne([])
+        })
+    },[])
   return (
     <>
        <div class="flex flex-col">
@@ -13,12 +30,10 @@ const Panne = () => {
             </div>
             <div className='flex flex-row items-center justify-between mb-2 bg-white p-2 rounded-2xl shadow-sm'>
             <ul className='flex gap-2 '>
-                <li className='bg-secondary px-6 py-1 rounded-2xl'>All</li>
-                <li className=' px-6 py-1 rounded-2xl'>Admin</li>
-                <li className=' px-6 py-1 rounded-2xl'>Eleve</li>
-                <li className=' px-6 py-1 rounded-2xl'>technicien</li>
-                <li className=' px-6 py-1 rounded-2xl'>Proff</li>
-                <li className=' px-6 py-1 rounded-2xl'>Chef dep</li>
+                <li className='bg-secondary px-6 py-1 rounded-2xl'>Tous</li>
+                <li className=' px-6 py-1 rounded-2xl'>En Cours</li>
+                <li className=' px-6 py-1 rounded-2xl'>Refuser</li>
+                <li className=' px-6 py-1 rounded-2xl'>Rendus</li>
             </ul>
             
             </div>
@@ -27,14 +42,27 @@ const Panne = () => {
                     <thead>
                         <tr class="bg-white border-b-4">
                             <th scope="col" class="p-3  text-left text-lg leading-6 font-semibold capitalize rounded-tl-xl"> ID </th>
-                            <th scope="col" class="p-3 text-left text-lg leading-6 font-semibold  capitalize">Nom </th>
-                            <th scope="col" class="p-3 text-left text-lg leading-6 font-semibold  capitalize"> Preonom </th>
-                            <th scope="col" class="p-3 text-left text-lg leading-6 font-semibold  capitalize"> Email</th>
+                            <th scope="col" class="p-3 text-left text-lg leading-6 font-semibold  capitalize">date signalement </th>
+                            <th scope="col" class="p-3 text-left text-lg leading-6 font-semibold  capitalize"> description </th>
+                            <th scope="col" class="p-3 text-left text-lg leading-6 font-semibold  capitalize"> etat</th>
+                            <th scope="col" class="p-3 text-left text-lg leading-6 font-semibold  capitalize"> materiel id</th>
+                            <th scope="col" class="p-3 text-left text-lg leading-6 font-semibold  capitalize"> Utilisateur id</th>
                             <th scope="col" class="p-3 text-left text-lg leading-6 font-semibold  capitalize rounded-tr-xl"> Actions </th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-300 ">
-                        
+                    {panne.length === 0 ?(<tr><td>tsisy</td></tr>):(
+                            panne.map((pan,idx)=>(
+                                <tr key={idx}>
+                                     <td className="p-3 text-left text-lg leading-6 ">{pan.id}</td>
+                                     <td className="p-3 text-left text-lg leading-6 ">{pan.date_signalement}</td>
+                                     <td className="p-3 text-left text-lg leading-6 ">{pan.description}</td>
+                                     <td className="p-3 text-left text-lg leading-6 ">{pan.etat}</td>
+                                     <td className="p-3 text-left text-lg leading-6 ">{pan.materiel}</td>
+                                     <td className="p-3 text-left text-lg leading-6 ">{pan.utilisateur}</td>
+                                </tr>
+                            ))
+                        )}
                     </tbody>
                 </table>
             </div>

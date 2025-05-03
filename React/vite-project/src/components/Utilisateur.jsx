@@ -1,6 +1,23 @@
-import React from 'react'
-
+import React,{useEffect,useState} from 'react'
+import axios from 'axios'
 const Utilisateur = () => {
+    const [Utilisateur,SetUtilisateur] = useState([])
+    useEffect(()=>{
+        axios.get('http://127.0.0.1:8000/materielle/utilisateur')
+        .then((res)=>{
+            if(res.data){
+                SetUtilisateur(res.data)
+            }
+            else{
+                SetUtilisateur([])
+            }
+            console.log(res.data)
+        })
+        .catch((err)=>{
+            console.log(err)
+            SetUtilisateur([])
+        })
+    },[])
   return (
     <>
     <div class="flex flex-col ">
@@ -28,13 +45,24 @@ const Utilisateur = () => {
                         <tr class="bg-white border-b-4">
                             <th scope="col" class="p-3  text-left text-lg leading-6 font-semibold capitalize rounded-tl-xl"> ID </th>
                             <th scope="col" class="p-3 text-left text-lg leading-6 font-semibold  capitalize">Nom </th>
-                            <th scope="col" class="p-3 text-left text-lg leading-6 font-semibold  capitalize"> Preonom </th>
-                            <th scope="col" class="p-3 text-left text-lg leading-6 font-semibold  capitalize"> Email</th>
+                            <th scope="col" class="p-3 text-left text-lg leading-6 font-semibold  capitalize"> Email </th>
+                            <th scope="col" class="p-3 text-left text-lg leading-6 font-semibold  capitalize"> Role</th>
+                            <th scope="col" class="p-3 text-left text-lg leading-6 font-semibold  capitalize"> Departemet</th>
                             <th scope="col" class="p-3 text-left text-lg leading-6 font-semibold  capitalize rounded-tr-xl"> Actions </th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-300 ">
-                        
+                    {Utilisateur.length === 0 ?(<tr><td>tsisy</td></tr>):(
+                            Utilisateur.map((User,idx)=>(
+                                <tr key={idx}>
+                                     <td className="p-3 text-left text-lg leading-6 ">{User.id}</td>
+                                     <td className="p-3 text-left text-lg leading-6 ">{User.username}</td>
+                                     <td className="p-3 text-left text-lg leading-6 ">{User.email}</td>
+                                     <td className="p-3 text-left text-lg leading-6 ">{User.role}</td>
+                                     <td className="p-3 text-left text-lg leading-6 ">{User.departement}</td>
+                                </tr>
+                            ))
+                        )}
                     </tbody>
                 </table>
             </div>

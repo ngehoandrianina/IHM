@@ -1,6 +1,33 @@
-import React from 'react'
-
+import React, { useEffect, useState } from 'react'
+import axios from 'axios'
 const Materielle = () => {
+
+    const [materiel,setMateriel] = useState([])
+    useEffect(()=>{
+        /*fetch('http://127.0.0.1:8000/materielle/materiels')
+        .then(re=>re.json())
+        .then(res=>{
+          console.log(res)
+        })
+        .catch(err=>{
+          console.error(err)
+        })*/
+    axios.get('http://127.0.0.1:8000/materielle/materiels')
+    .then((res)=>{
+        if(res.data){
+            setMateriel(res.data)
+        }
+        else{
+            setMateriel([])
+        }
+        console.log(res.data)
+    })
+    .catch((err)=>{
+        console.log(err)
+        setMateriel([])
+    })
+    },[])
+   
   return (
    <>
     <div class="flex flex-col overflow-hidden">
@@ -40,7 +67,26 @@ const Materielle = () => {
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-300 ">
-                      
+                        { materiel.length === 0 ? (<tr><td>Pas de donner</td></tr>):(
+                            materiel.map((mat,idx)=>(
+                                <tr key={idx}>
+                                    <td className="p-3 text-left text-lg leading-6 ">{mat.id}</td>
+                                    <td className="p-3 text-left text-lg leading-6 ">{mat.nom}</td>
+                                    <td className="p-3 text-left text-lg leading-6 ">{mat.type}</td>
+                                    <td className="p-3 text-left text-lg leading-6 ">{mat.marque}</td>
+                                    <td className="p-3 text-left text-lg leading-6 ">{mat.modele}</td>
+                                    <td className="p-3 text-left text-lg leading-6 ">{mat.numero_serie}</td>
+                                    <td className="p-3 text-left text-lg leading-6 ">{mat.etat}</td>
+                                    <td className="p-3 text-left text-lg leading-6 ">{mat.date_acquisition}</td>
+                                    <td className="p-3 text-left text-lg leading-6 ">{mat.salle ? mat.salle:'Null'}</td>
+                                    <td className="p-3 text-left text-lg leading-6 ">{mat.departement}</td>
+                                    <td className="p-3 text-left text-lg leading-6 ">
+                                        <h1>Edit</h1>
+                                        <h1>Delete</h1>
+                                    </td>
+                                </tr>
+                            )))
+                        }
                     </tbody>
                 </table>
             </div>

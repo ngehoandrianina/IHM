@@ -1,6 +1,23 @@
-import React from 'react'
-
+import React, { useEffect, useState } from 'react'
+import axios from 'axios'
 const Maitenance = () => {
+    const [Maintenance,setMaintenace] = useState([])
+    useEffect(()=>{
+        axios.get('http://127.0.0.1:8000/materielle/maintenance')
+        .then((res)=>{
+            if(res.data){
+                setMaintenace(res.data)
+            }
+            else{
+                setMaintenace([])
+            }
+            console.log(res.data)
+        })
+        .catch((err)=>{
+            console.log(err)
+            setMaintenace([])
+        })
+    },[])
   return (
     <>
        <div class="flex flex-col">
@@ -27,14 +44,26 @@ const Maitenance = () => {
                     <thead>
                         <tr class="bg-white border-b-4">
                             <th scope="col" class="p-3  text-left text-lg leading-6 font-semibold capitalize rounded-tl-xl"> ID </th>
-                            <th scope="col" class="p-3 text-left text-lg leading-6 font-semibold  capitalize">Nom </th>
-                            <th scope="col" class="p-3 text-left text-lg leading-6 font-semibold  capitalize"> Preonom </th>
-                            <th scope="col" class="p-3 text-left text-lg leading-6 font-semibold  capitalize"> Email</th>
+                            <th scope="col" class="p-3 text-left text-lg leading-6 font-semibold  capitalize">date intervention </th>
+                            <th scope="col" class="p-3 text-left text-lg leading-6 font-semibold  capitalize"> desciption </th>
+                            <th scope="col" class="p-3 text-left text-lg leading-6 font-semibold  capitalize"> Signalement id</th>
+                            <th scope="col" class="p-3 text-left text-lg leading-6 font-semibold  capitalize"> technichien id</th>
                             <th scope="col" class="p-3 text-left text-lg leading-6 font-semibold  capitalize rounded-tr-xl"> Actions </th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-300 ">
-                        
+                        {Maintenance.length === 0 ?(<tr><td>tsisy</td></tr>):(
+                            Maintenance.map((maintenace,idx)=>(
+                                <tr key={idx}>
+                                     <td className="p-3 text-left text-lg leading-6 ">{maintenace.id}</td>
+                                     <td className="p-3 text-left text-lg leading-6 ">{maintenace.date_intervention}</td>
+                                     <td className="p-3 text-left text-lg leading-6 ">{maintenace.description}</td>
+                                     <td className="p-3 text-left text-lg leading-6 ">{maintenace.signalement}</td>
+                                     <td className="p-3 text-left text-lg leading-6 ">{maintenace.technicien}</td>
+
+                                </tr>
+                            ))
+                        )}
                     </tbody>
                 </table>
             </div>

@@ -1,6 +1,23 @@
-import React from 'react'
-
+import React,{useState,useEffect} from 'react'
+import axios from 'axios'
 const Salle = () => {
+    const [Salle,setSalle] = useState([])
+    useEffect(()=>{
+        axios.get('http://127.0.0.1:8000/materielle/salle')
+        .then((res)=>{
+            if(res.data){
+                setSalle(res.data)
+            }
+            else{
+                setSalle([])
+            }
+            console.log(res.data)
+        })
+        .catch((err)=>{
+            console.log(err)
+            setSalle([])
+        })
+    },[])
   return (
     <>
            <div class="flex flex-col">
@@ -28,13 +45,22 @@ const Salle = () => {
                         <tr class="bg-white border-b-4">
                             <th scope="col" class="p-3  text-left text-lg leading-6 font-semibold capitalize rounded-tl-xl"> ID </th>
                             <th scope="col" class="p-3 text-left text-lg leading-6 font-semibold  capitalize">Nom </th>
-                            <th scope="col" class="p-3 text-left text-lg leading-6 font-semibold  capitalize"> Preonom </th>
-                            <th scope="col" class="p-3 text-left text-lg leading-6 font-semibold  capitalize"> Email</th>
+                            <th scope="col" class="p-3 text-left text-lg leading-6 font-semibold  capitalize"> Batiment </th>
+                            <th scope="col" class="p-3 text-left text-lg leading-6 font-semibold  capitalize"> Etage</th>
                             <th scope="col" class="p-3 text-left text-lg leading-6 font-semibold  capitalize rounded-tr-xl"> Actions </th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-300 ">
-                        
+                        {Salle.length === 0 ?(<tr><td>tsisy</td></tr>):(
+                            Salle.map((sal,idx)=>(
+                                <tr key={idx}>
+                                     <td className="p-3 text-left text-lg leading-6 ">{sal.id}</td>
+                                     <td className="p-3 text-left text-lg leading-6 ">{sal.nom}</td>
+                                     <td className="p-3 text-left text-lg leading-6 ">{sal.batiment}</td>
+                                     <td className="p-3 text-left text-lg leading-6 ">{sal.etage}</td>
+                                </tr>
+                            ))
+                        )}
                     </tbody>
                 </table>
             </div>
