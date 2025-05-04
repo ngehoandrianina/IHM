@@ -7,6 +7,8 @@ import Maitenance from './Maitenance';
 import DemandePret from './DemandePret';
 import Salle from './Salle';
 import Utilisateur from './Utilisateur';
+import {ToastContainer} from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css';
 
 const Home = () => {
     const [activePage, setActivePage] = useState('dashboard');
@@ -34,6 +36,7 @@ const Home = () => {
   const [isDark, setIsDark] = useState(false);
   return (
     <>
+    <ToastContainer />
     <div className={isDark ? 'dark' : ''}>
     <div className='flex flex-row relative bg-[#f8f9fa] dark:bg-black dark:text-white '>
         <div>

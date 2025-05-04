@@ -1,17 +1,33 @@
-import React from 'react'
+import React,{useState} from 'react'
+import { useNavigate } from 'react-router-dom';
+import authService from '../../Service/authService.js';
 
 const Login = () => {
+    const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const navigate = useNavigate();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    console.log('ato')
+    try {
+      await authService.login(username, password);
+      const user = authService.getCurrentUser();
+      alert(user.role) 
+    } catch (err) {
+      setError('Identifiants incorrects');
+    }
+  };
   return (
     <section class="bg-gray-100 min-h-screen flex box-border justify-center items-center shadow-sm">
     <div class="bg-[#dfa674] rounded-2xl flex max-w-3xl p-5 items-center">
         <div class="md:w-1/2 px-8">
             <h2 class="font-bold text-3xl text-[#002D74]">Login</h2>
             <p class="text-sm mt-4 text-[#002D74]">If you already a member, easily log in now.</p>
-
-            <form action="" class="flex flex-col gap-4">
-                <input class="p-2 mt-8 rounded-xl border" type="email" name="email" placeholder="Email" />
+            <form onSubmit={handleSubmit} class="flex flex-col gap-4">
+                <input value={username} onChange={(e)=>setUsername(e.target.value)} class="p-2 mt-8 rounded-xl border" type="text" name="email" placeholder="Email" />
                 <div class="relative">
-                    <input class="p-2 rounded-xl border w-full" type="password" name="password" id="password" placeholder="Password" />
+                    <input value={password} onChange={(e)=>setPassword(e.target.value)} class="p-2 rounded-xl border w-full" type="password" name="password" id="password" placeholder="Password" />
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="gray" id="togglePassword"
                         class="bi bi-eye absolute top-1/2 right-3 -translate-y-1/2 cursor-pointer z-20 opacity-100"
                         viewBox="0 0 16 16">
@@ -33,7 +49,7 @@ const Login = () => {
                         </path>
                     </svg>
                 </div>
-                <button class="bg-[#002D74] text-white py-2 rounded-xl hover:scale-105 duration-300 hover:bg-[#206ab1] font-medium" type="submit">Login</button>
+                <button className="bg-[#002D74] text-white py-2 rounded-xl hover:scale-105 duration-300 hover:bg-[#206ab1] font-medium" type="submit">Login</button>
             </form>
            
             <div class="mt-10 text-sm border-b border-gray-500 py-5 playfair tooltip">Forget password?</div>

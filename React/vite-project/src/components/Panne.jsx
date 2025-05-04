@@ -1,5 +1,10 @@
 import React,{useState,useEffect} from 'react'
 import axios from 'axios'
+import { toast } from 'react-toastify'
+import Swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content';
+
+const MySwal = withReactContent(Swal);
 const Panne = () => {
     const [panne,setPanne] = useState([])
     useEffect(()=>{
@@ -18,6 +23,19 @@ const Panne = () => {
             setPanne([])
         })
     },[])
+const showAlert =()=>{
+    MySwal.fire({
+        title: 'Êtes-vous sûr ?',
+        text: "Cette action est irréversible.",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Oui, supprimer',
+        cancelButtonText: 'Annuler',
+      });
+}
+
   return (
     <>
        <div class="flex flex-col">
@@ -26,14 +44,13 @@ const Panne = () => {
             <h1 className='text-2xl mb-4'>Signalement Panne</h1>
             <div class="relative flex items-center justify-between text-gray-500 focus-within:text-gray-900 mb-2 bg-white p-2 rounded-2xl shadow-sm">
                 <input type="text" id="default-search" class="block w-80 h-11 pr-5 pl-12 py-2.5 text-base font-normal shadow-xs text-gray-900 bg-transparent border border-gray-300 rounded-full placeholder-gray-400 focus:outline-none" placeholder="Search for user" />
-                <button className='border px-6 py-2 rounded-4xl bg-primary text-white'>+ Add</button>
+                <button onClick={()=>showAlert()}  className='border px-6 py-2 rounded-4xl bg-primary text-white'>+ Add</button>
             </div>
             <div className='flex flex-row items-center justify-between mb-2 bg-white p-2 rounded-2xl shadow-sm'>
             <ul className='flex gap-2 '>
                 <li className='bg-secondary px-6 py-1 rounded-2xl'>Tous</li>
-                <li className=' px-6 py-1 rounded-2xl'>En Cours</li>
-                <li className=' px-6 py-1 rounded-2xl'>Refuser</li>
-                <li className=' px-6 py-1 rounded-2xl'>Rendus</li>
+                <li className=' px-6 py-1 rounded-2xl'>Aujourd'hui</li>
+                <li className=' px-6 py-1 rounded-2xl'>date specifique</li>
             </ul>
             
             </div>

@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import Utilisateur, Materiel, DemandePret, SignalementPanne, Maintenance,Salle
+from django.contrib.auth.hashers import make_password
 
 class UtilisateurSerializer(serializers.ModelSerializer):
     class Meta:
@@ -33,3 +34,25 @@ class MaintenaceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Maintenance
         fields = '__all__'
+
+##creation USer
+
+class UserRegistrationSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True, required=True)
+    
+    class Meta:
+        model = Utilisateur
+        fields = ['username', 'password', 'email', 'role', 'departement']
+        extra_kwargs = {
+            'role': {'required': True},
+            'email': {'required': True}
+        }
+    
+    def validate_role(self, value):
+        if value not in dict(Utilisateur.ROLE_CHOICES).keys():
+            raise serializers.ValidationError("Rôle invalide")
+        return value
+    
+    def create(self, validated_data):
+        validated_data['password'] = make_password(validated_data.get('password'))
+        return super().create(validated_data)

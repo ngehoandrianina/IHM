@@ -31,13 +31,9 @@ const Maitenance = () => {
             <div className='flex flex-row items-center justify-between mb-2 bg-white p-2 rounded-2xl shadow-sm'>
             <ul className='flex gap-2 '>
                 <li className='bg-secondary px-6 py-1 rounded-2xl'>All</li>
-                <li className=' px-6 py-1 rounded-2xl'>Admin</li>
-                <li className=' px-6 py-1 rounded-2xl'>Eleve</li>
-                <li className=' px-6 py-1 rounded-2xl'>technicien</li>
-                <li className=' px-6 py-1 rounded-2xl'>Proff</li>
-                <li className=' px-6 py-1 rounded-2xl'>Chef dep</li>
+                <li className=' px-6 py-1 rounded-2xl'>En cours</li>
+                <li className=' px-6 py-1 rounded-2xl'>Repare</li>
             </ul>
-            
             </div>
             <div class="overflow-hidden dark:bg-black p-2 bg-white rounded-2xl shadow-sm ">
                 <table class="min-w-full rounded-xl dark:bg-black">

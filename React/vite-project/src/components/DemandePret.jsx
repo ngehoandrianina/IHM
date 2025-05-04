@@ -35,11 +35,9 @@ const DemandePret = () => {
             <div className='flex flex-row items-center justify-between mb-2 bg-white p-2 rounded-2xl shadow-sm'>
             <ul className='flex gap-2 '>
                 <li className='bg-secondary px-6 py-1 rounded-2xl'>All</li>
-                <li className=' px-6 py-1 rounded-2xl'>Admin</li>
-                <li className=' px-6 py-1 rounded-2xl'>Eleve</li>
-                <li className=' px-6 py-1 rounded-2xl'>technicien</li>
-                <li className=' px-6 py-1 rounded-2xl'>Proff</li>
-                <li className=' px-6 py-1 rounded-2xl'>Chef dep</li>
+                <li className=' px-6 py-1 rounded-2xl'>En Cours</li>
+                <li className=' px-6 py-1 rounded-2xl'>Accpeter</li>
+                <li className=' px-6 py-1 rounded-2xl'>Refuser</li>
             </ul>
             
             </div>
