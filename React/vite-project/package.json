@@ -11,9 +11,11 @@
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.0.7",
+    "autoprefixer": "^10.4.21",
     "axios": "^1.9.0",
     "framer-motion": "^12.9.4",
     "js-cookie": "^3.0.5",
+    "postcss": "^8.5.3",
     "react": "^19.0.0",
     "react-datepicker": "^8.3.0",
     "react-dom": "^19.0.0",
