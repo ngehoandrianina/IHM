@@ -1,4 +1,18 @@
-@import 'tailwindcss';
+@import "tailwindcss";
+
+/*
+@plugin "daisyui/theme" {
+  name: "light";
+  default: true;
+  --color-primary: #00ABE4;
+  --font-primary: "inter", "sans-serif";
+  --breakpoint-3xl: 120rem;
+  --color-primary: #00ABE4;
+  --color-secondary: #A0DEFF;
+  --color-tersary:#FFF9D0;
+}
+
+*/
 
 @custom-variant dark (&:where(.dark, .dark *));
 
@@ -8,5 +22,4 @@
   --color-primary: #00ABE4;
   --color-secondary: #A0DEFF;
   --color-tersary:#FFF9D0;
-  /* ... */
 }

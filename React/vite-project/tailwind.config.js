@@ -1,4 +1,5 @@
 // tailwind.config.js
+import tailwindcss from 'tailwindcss'
 export default {
     darkMode: 'class',
     content: [
@@ -8,6 +9,8 @@ export default {
     theme: {
       extend: {},
     },
-    plugins: [],
+    plugins: [
+      tailwindcss()
+    ],
   }
   
