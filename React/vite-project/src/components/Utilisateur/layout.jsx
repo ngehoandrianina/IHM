@@ -1,4 +1,4 @@
-import { Outlet, Link ,NavLink} from "react-router-dom";
+import { Outlet, Link ,NavLink, useNavigate} from "react-router-dom";
 import {BsSearch} from "react-icons/bs"
 import {GoHome} from "react-icons/go"
 import {IoHelpCircleOutline as Help} from "react-icons/io5"
@@ -8,6 +8,8 @@ import NavBarUser from "./NavBarUser";
 
 
 function Layout(){
+    const navigate = useNavigate();
+    
     return(
         <div className="flex">
           <div className="h-screen w-60 bg-base-100 shadow-sm">
@@ -35,18 +37,23 @@ function Layout(){
                     <NavLink to='/user/materiel'>Materiels</NavLink>
                   </li>
                   <li className="flex items-center gap-1 ml-2 text-gray-700 rounded-md px-2 py-1 hover:bg-gray-300">
+                    <CgEditUnmask />
+                    <NavLink to='/user/maintenance'>Maintenance</NavLink>
+                  </li>
+                  <li className="flex items-center gap-1 ml-2 text-gray-700 rounded-md px-2 py-1 hover:bg-gray-300">
                     <Help />
                     <NavLink to='/user/apropos'>Apropos</NavLink>
                   </li>
               </ul>
             {/* logout */}
-              <button className="flex items-center gap-1 ml-3 text-gray-700 mt-50">
+              <button className="flex items-center gap-1 ml-4 text-gray-700 mt-50 cursor-pointer"
+                onClick={() => navigate("/login")}
+              >
                   <CiLogout className="text-xl text-red-500"/>
                   <span>Logout</span>
               </button>
           </div>
           <div className="w-full py-5 px-5">
-            <NavBarUser />
             <Outlet/>
           </div>
         </div>
