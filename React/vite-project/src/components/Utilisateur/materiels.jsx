@@ -1,28 +1,37 @@
 
 export default function Materiels(){
+
     return(
-        <div>
-           <div class="overflow-hidden dark:bg-black p-2 bg-white rounded-2xl shadow-sm ">
-                <table class="min-w-full rounded-xl dark:bg-black">
-                    <thead>
-                        <tr class="bg-white border-b-4">
-                            <th scope="col" class="p-3  text-left text-lg leading-6 font-semibold capitalize rounded-tl-xl"> ID </th>
-                            <th scope="col" class="p-3 text-left text-lg leading-6 font-semibold  capitalize">Nom </th>
-                            <th scope="col" class="p-3 text-left text-lg leading-6 font-semibold  capitalize"> Type </th>
-                            <th scope="col" class="p-3 text-left text-lg leading-6 font-semibold  capitalize"> Marque</th>
-                            <th scope="col" class="p-3 text-left text-lg leading-6 font-semibold  capitalize"> Model</th>
-                            <th scope="col" class="p-3 text-left text-lg leading-6 font-semibold  capitalize"> Numero de Serie</th>
-                            <th scope="col" class="p-3 text-left text-lg leading-6 font-semibold  capitalize"> Etat</th>
-                            <th scope="col" class="p-3 text-left text-lg leading-6 font-semibold  capitalize"> Date Aquisition</th>
-                            <th scope="col" class="p-3 text-left text-lg leading-6 font-semibold  capitalize"> Salle</th>
-                            <th scope="col" class="p-3 text-left text-lg leading-6 font-semibold  capitalize"> Departemet</th>
-                            <th scope="col" class="p-3 text-left text-lg leading-6 font-semibold  capitalize rounded-tr-xl"> Actions </th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-gray-300 ">
-                    </tbody>
-                </table>
+        <div className="overflow-x-auto w-full">
+            <div className="flex justify-between mb-5">
+                <h1 className="text-md text-gray-500">Materiels disponnible </h1>
             </div>
+            <table className="w-full">
+                <thead className="border-b-1">
+                    <tr className="">
+                        <th className="text-left">Matriels</th>
+                        <th className="text-left">Etat</th>
+                        <th className="text-left">Description</th>
+                        <th className="text-left">Date signalement</th>
+                        <th className="text-left">Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr>
+                        <td className="">Projecteur</td>
+                        <td>en panne</td>
+                        <td>Non difussion image</td>
+                        <td>03-05-2024</td>
+                        <td>
+                            <button className="bg-primary rounded-lg px-2 py-1
+                             text-sm font-bold text-white cursor-pointer ">
+                                Reparer
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+                </table>
         </div>
     );
 }

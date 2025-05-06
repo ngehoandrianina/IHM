@@ -14,7 +14,7 @@ function Layout(){
             {/* Title */}
               <div className="mt-5">
                 <h1 className="text-2xl text-center text-bold">
-                  Utilisateur
+                  Technicien
                 </h1>
               </div>
 
