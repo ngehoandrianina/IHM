@@ -35,6 +35,7 @@ class SalleViewSet(viewsets.ModelViewSet):
 class SignalementPanneViewSet(viewsets.ModelViewSet):
     queryset = SignalementPanne.objects.all()
     serializer_class = SignalementPanneSerializer
+   
 
 class MaintenanceViewSet(viewsets.ModelViewSet):
     queryset = Maintenance.objects.all()

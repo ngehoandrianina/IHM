@@ -4,6 +4,7 @@ import {GoHome} from "react-icons/go"
 import {IoHelpCircleOutline as Help} from "react-icons/io5"
 import {CiLogout} from "react-icons/ci"
 import {CgEditUnmask} from "react-icons/cg"
+import NavBarUser from "./NavBarUser";
 
 
 function Layout(){
@@ -44,8 +45,8 @@ function Layout(){
                   <span>Logout</span>
               </button>
           </div>
-
           <div className="w-full py-5 px-5">
+            <NavBarUser />
             <Outlet/>
           </div>
         </div>

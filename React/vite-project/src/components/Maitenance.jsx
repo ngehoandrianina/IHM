@@ -26,7 +26,7 @@ const Maitenance = () => {
             <h1 className='text-2xl mb-4'>Maintenance</h1>
             <div class="relative flex items-center justify-between text-gray-500 focus-within:text-gray-900 mb-2 bg-white p-2 rounded-2xl shadow-sm">
                 <input type="text" id="default-search" class="block w-80 h-11 pr-5 pl-12 py-2.5 text-base font-normal shadow-xs text-gray-900 bg-transparent border border-gray-300 rounded-full placeholder-gray-400 focus:outline-none" placeholder="Search for user" />
-                <button className='border px-6 py-2 rounded-4xl bg-primary text-white'>+ Add</button>
+           
             </div>
             <div className='flex flex-row items-center justify-between mb-2 bg-white p-2 rounded-2xl shadow-sm'>
             <ul className='flex gap-2 '>

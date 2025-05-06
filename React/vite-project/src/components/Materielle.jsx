@@ -1,13 +1,17 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import AjoutMateriel from './AjoutMateriel'
+import Swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content';
+const MySwal = withReactContent(Swal);
 
 const Materielle = () => {
     const [showAdd,setShowAdd] = useState(false)
     const [materiel,setMateriel] = useState([])
+    const [refesh,setRefresh] = useState(false)
     //pagination
     const [page,setPage] = useState(0)
-    const itemPerPage = 5;
+    const itemPerPage = 6;
     const TotalPage = Math.ceil(materiel.length / itemPerPage)
     const startIndex = page * itemPerPage;
     const visibleItems = materiel.slice(startIndex,startIndex + itemPerPage)
@@ -38,20 +42,37 @@ const Materielle = () => {
         console.log(err)
         setMateriel([])
     })
-    },[])
+    },[refesh])
     const DeleteMateriel = (id) =>{
-      /*  axios.delete(`http://127.0.0.1:8000/materielle/materiels/${id}/`)
-        .then((res)=>{
-           alert('Deleteer',id)
-        })
-        .catch((err)=>{
-            console.log(err)
-        
-        })*/
-       if(confirm('Delete ?'+id)){
-            alert('vita')
-       }
+        MySwal.fire({
+            title: 'Êtes-vous sûr ?',
+            text: "Cette action est irréversible.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Oui, supprimer',
+            cancelButtonText: 'Annuler',
+        }).then((res)=>{
+            axios.delete(`http://127.0.0.1:8000/materielle/materiels/${id}/`)
+            .then((res)=>{
+                if(res.isConfirmed){
+                    MySwal.fire('Supprimer avec succes','element suprimer','success')
+                }
+                setRefresh((prev)=>!prev)
+            })
+            .catch((err)=>{
+                console.log(err)
+            })
+        });
     }
+    const [DataUpdate,SetDataUpdate]=useState({})
+    const [Update,SetUpdate]=useState(false)
+const editMateriel =(data)=>{
+    SetDataUpdate(data)
+    setShowAdd(true)
+    SetUpdate(true)
+}
   return (
    <>
     <div class="flex flex-col overflow-hidden relative">
@@ -59,7 +80,7 @@ const Materielle = () => {
         <div class="min-w-full inline-block align-middle shadow-2xl">
             <div class="relative mt-2 flex items-center justify-between text-gray-500 focus-within:text-gray-900 mb-2 bg-white p-2 rounded-2xl shadow-sm">
                 <input type="text" id="default-search" class="block w-80 h-11 pr-5 pl-12 py-2.5 text-base font-normal shadow-xs text-gray-900 bg-transparent border border-gray-300 rounded-full placeholder-gray-400 focus:outline-none" placeholder="Search for user" />
-                <button onClick={()=>setShowAdd(true)} className='border px-6 py-2 rounded-4xl bg-primary text-white'>+ Add</button>
+                <button onClick={()=>setShowAdd(true)} className='border px-6 py-2 rounded-4xl bg-secondary text-white'>+ Add</button>
             </div>
             <div className='flex flex-row items-center justify-between mb-2 bg-white p-2 rounded-2xl shadow-sm'>
             <ul className='flex gap-2 '>
@@ -102,7 +123,7 @@ const Materielle = () => {
                                     <td className="p-3 text-left text-lg leading-6 ">{mat.salle ? mat.salle:'Null'}</td>
                                     <td className="p-3 text-left text-lg leading-6 ">{mat.departement}</td>
                                     <td className="p-3 text-left text-lg leading-6 flex items-center justify-between px-4 ">
-                                       <button ><img src='/icone/edit.png' className='w-10 hover:border rounded-full p-2'/></button>
+                                       <button onClick={()=>editMateriel(mat)} ><img src='/icone/edit.png' className='w-10 hover:border rounded-full p-2'/></button>
                                        <button onClick={()=>DeleteMateriel(mat.id)}><img src='/icone/delete.png' className='w-10 hover:border rounded-full p-2' /></button>
                                     </td>
                                 </tr>
@@ -130,7 +151,7 @@ const Materielle = () => {
             </a>
               ))}
           
-          <a onClick={()=>nextPage()} class="flex w-10 h-10 ml-1 justify-center items-center rounded-full border border-gray-200 bg-white dark:bg-gray-800 text-black dark:text-white hover:border-gray-300 dark:hover:border-gray-600"
+          <a onClick={()=>nextPage()}  class="flex w-10 h-10 ml-1 justify-center items-center rounded-full border border-gray-200 bg-white dark:bg-gray-800 text-black dark:text-white hover:border-gray-300 dark:hover:border-gray-600"
               href="#" title="Next Page">
               <span class="sr-only">Next Page</span>
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
@@ -142,7 +163,7 @@ const Materielle = () => {
         </div>
       
       </div>
-     <AjoutMateriel show={showAdd} setShow={setShowAdd} />
+     <AjoutMateriel DataUpdate={DataUpdate} Update={Update} SetUpdate={SetUpdate} show={showAdd} setShow={setShowAdd} refresh={setRefresh} />
    </>
   )
 }

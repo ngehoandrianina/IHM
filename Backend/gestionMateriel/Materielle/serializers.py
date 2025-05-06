@@ -5,7 +5,7 @@ from django.contrib.auth.hashers import make_password
 class UtilisateurSerializer(serializers.ModelSerializer):
     class Meta:
         model = Utilisateur
-        fields = ['id', 'username', 'email', 'role']
+        fields = ['id', 'username', 'email', 'role','departement']
 
 class MaterielSerializer(serializers.ModelSerializer):
     class Meta:
@@ -15,7 +15,6 @@ class MaterielSerializer(serializers.ModelSerializer):
 class DemandePretSerializer(serializers.ModelSerializer):
     materiel = MaterielSerializer(read_only=True)
     demandeur = UtilisateurSerializer(read_only=True)
-    
     class Meta:
         model = DemandePret
         fields = '__all__'
@@ -26,6 +25,7 @@ class SalleSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class SignalementPanneSerializer(serializers.ModelSerializer):
+    
     class Meta:
         model = SignalementPanne
         fields = '__all__'
@@ -39,7 +39,6 @@ class MaintenaceSerializer(serializers.ModelSerializer):
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, required=True)
-    
     class Meta:
         model = Utilisateur
         fields = ['username', 'password', 'email', 'role', 'departement']
@@ -47,7 +46,6 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
             'role': {'required': True},
             'email': {'required': True}
         }
-    
     def validate_role(self, value):
         if value not in dict(Utilisateur.ROLE_CHOICES).keys():
             raise serializers.ValidationError("Rôle invalide")

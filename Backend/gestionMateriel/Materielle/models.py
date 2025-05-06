@@ -44,7 +44,6 @@ class Salle(models.Model):
     nom = models.CharField(max_length=100)
     batiment = models.CharField(max_length=100)
     etage = models.CharField(max_length=20)
-    
     def __str__(self):
         return f"{self.nom} ({self.batiment} - {self.etage})"
 
@@ -53,10 +52,10 @@ class Materiel(models.Model):
         ('Disponible', 'Disponible'),
         ('En pret', 'En prêt'),
         ('En panne', 'En panne'),
-        ('Réparé', 'Réparé'),
+        ('Repare', 'Réparé'),
         ('Hors service', 'Hors service'),
+        ('Pour Salle','Pour Salle')
     ]
-    
     nom = models.CharField(max_length=100)
     type = models.CharField(max_length=100)
     marque = models.CharField(max_length=100)
@@ -66,7 +65,6 @@ class Materiel(models.Model):
     date_acquisition = models.DateField()
     salle = models.ForeignKey(Salle, on_delete=models.SET_NULL, null=True, blank=True)
     departement = models.CharField(max_length=100)
-    
     def __str__(self):
         return f"{self.nom} ({self.marque} {self.modele})"
 
@@ -77,7 +75,6 @@ class DemandePret(models.Model):
         ('Refusé', 'Refusé'),
         ('Terminé', 'Terminé'),
     ]
-    
     demandeur = models.ForeignKey(Utilisateur, on_delete=models.CASCADE)
     materiel = models.ForeignKey(Materiel, on_delete=models.CASCADE)
     date_demande = models.DateTimeField(auto_now_add=True)

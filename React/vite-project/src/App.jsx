@@ -15,17 +15,9 @@ import Signup from './components/Utilisateur/signup'
 
 
 function App() {
-  const [count, setCount] = useState(0)
-
+ 
   return (
     <>
-<BrowserRouter>
-    <Routes>
-        <Route path='/' element={<Home />} />
-        <Route path='/login' element={<Login />} />
-        <Route path='/User' element={<UserPage />} />
-    </Routes>
-</BrowserRouter>
     <BrowserRouter>
         <Routes>
             <Route path='/' element={<Home />} />

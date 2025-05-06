@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import DatePicker from 'react-datepicker'
 import axios from 'axios'
+import FairePre from './FairePre'
 
 const DemandePret = () => {
     const [date,setDate] = useState(new Date())
     const [demadePret,setDemandePret] = useState([])
-
+    const [show,setShow] = useState(false)
     useEffect(()=>{
         axios.get('http://127.0.0.1:8000/materielle/demandes-pret')
         .then((res)=>{
@@ -24,13 +25,14 @@ const DemandePret = () => {
     },[])
   return (
     <>
+        <FairePre show={show} setShow={setShow} />
        <div className="flex flex-col">
       <div className="overflow-x-auto">
         <div className="min-w-full inline-block align-middle shadow-2xl">
             <h1 className='text-2xl mb-4'>Demande de Pret</h1>
-            <div className="relative flex items-center justify-between text-gray-500 focus-within:text-gray-900 mb-2 bg-white p-2 rounded-2xl shadow-sm">
+            <div className=" flex items-center justify-between text-gray-500 focus-within:text-gray-900 mb-2 bg-white p-2 rounded-2xl shadow-sm">
                 <input type="text" id="default-search" class="block w-80 h-11 pr-5 pl-12 py-2.5 text-base font-normal shadow-xs text-gray-900 bg-transparent border border-gray-300 rounded-full placeholder-gray-400 focus:outline-none" placeholder="Search for user" />
-                <button className='border px-6 py-2 rounded-4xl bg-primary text-white'>+ Add</button>
+                <button onClick={()=>setShow(true)} className='border px-6 py-2 rounded-4xl bg-primary text-white'>+ Nouveau Pret</button>
             </div>
             <div className='flex flex-row items-center justify-between mb-2 bg-white p-2 rounded-2xl shadow-sm'>
             <ul className='flex gap-2 '>
@@ -45,7 +47,8 @@ const DemandePret = () => {
                 <table class="min-w-full rounded-xl dark:bg-black">
                     <thead>
                         <tr class="bg-white border-b-4">
-                            <th scope="col" className="p-3  text-left text-lg leading-6 font-semibold capitalize rounded-tl-xl"> ID </th>
+                            <th scope="col" className="p-3  text-left text-lg leading-6 font-semibold capitalize rounded-tl-xl">  </th>
+                            <th scope="col" className="p-3  text-left text-lg leading-6 font-semibold capitalize"> ID </th>
                             <th scope="col" className="p-3 text-left text-lg leading-6 font-semibold  capitalize">date demande </th>
                             <th scope="col" className="p-3 text-left text-lg leading-6 font-semibold  capitalize"> date debut </th>
                             <th scope="col" className="p-3 text-left text-lg leading-6 font-semibold  capitalize"> date fin</th>
@@ -60,6 +63,7 @@ const DemandePret = () => {
                             demadePret.length === 0 ? (<tr><td>Tsisy</td></tr>):(
                                 demadePret.map((dem,idx)=>(
                                     <tr key={idx}>
+                                        <td className="p-4 text-left text-lg leading-6 "><input type='checkbox'  /></td>
                                         <td className="p-3 text-left text-lg leading-6 ">{dem.id}</td>
                                         <td className="p-3 text-left text-lg leading-6 ">{dem.date_demande}</td>
                                         <td className="p-3 text-left text-lg leading-6 ">{dem.date_debut}</td>

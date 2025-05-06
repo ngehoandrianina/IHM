@@ -2,7 +2,6 @@
 @import 'tailwindcss';
 /*@plugin "daisyui";*/
 @import "tailwindcss";
-
 /*
 @plugin "daisyui/theme" {
   name: "light";
@@ -23,7 +22,7 @@
 @theme {
   --font-primary: "inter", "sans-serif";
   --breakpoint-3xl: 120rem;
-  --color-primary: #00ABE4;
-  --color-secondary: #A0DEFF;
+  --color-primary: #206ab1;
+  --color-secondary: #dfa674;
   --color-tersary:#FFF9D0;
 }

@@ -1,6 +1,8 @@
 import React,{useEffect,useState} from 'react'
 import axios from 'axios'
+import AjoutUtilisateur from './AjoutUtilisateur'
 const Utilisateur = () => {
+    const [show,setShow] = useState(false)
     const [Utilisateur,SetUtilisateur] = useState([])
     useEffect(()=>{
         axios.get('http://127.0.0.1:8000/materielle/utilisateur')
@@ -20,13 +22,14 @@ const Utilisateur = () => {
     },[])
   return (
     <>
+    <AjoutUtilisateur show={show} setShow={setShow} />
     <div class="flex flex-col ">
       <div class="overflow-x-auto">
         <div class="min-w-full inline-block align-middle shadow-2xl">
             <h1 className='text-2xl mb-4'>Utilisateur</h1>
-            <div class="relative flex items-center justify-between text-gray-500 focus-within:text-gray-900 mb-2 bg-white p-2 rounded-2xl shadow-sm">
+            <div class=" flex items-center justify-between text-gray-500 focus-within:text-gray-900 mb-2 bg-white p-2 rounded-2xl shadow-sm">
                 <input type="text" id="default-search" class="block w-80 h-11 pr-5 pl-12 py-2.5 text-base font-normal shadow-xs text-gray-900 bg-transparent border border-gray-300 rounded-full placeholder-gray-400 focus:outline-none" placeholder="Search for user" />
-                <button className='border px-6 py-2 rounded-4xl bg-primary text-white'>+ Add</button>
+                <button onClick={()=>setShow(true)} className='border px-6 py-2 rounded-4xl bg-primary text-white'>+ Add</button>
             </div>
             <div className='flex flex-row items-center justify-between mb-2 bg-white p-2 rounded-2xl shadow-sm'>
             <ul className='flex gap-2 '>
