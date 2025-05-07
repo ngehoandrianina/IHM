@@ -5,55 +5,57 @@ import {IoHelpCircleOutline as Help} from "react-icons/io5"
 import {CiLogout} from "react-icons/ci"
 import {CgEditUnmask} from "react-icons/cg"
 import NavBarUser from "./NavBarUser";
+import React from "react";
+import { FiLayout, FiUser } from "react-icons/fi";
 
 
 function Layout(){
     const navigate = useNavigate();
     
     return(
-        <div className="flex">
-          <div className="h-screen w-60 bg-base-100 shadow-sm">
+        <div className="">
+          <div className="h-16 flex bg-base-100 px-5 shadow-md">
             {/* Title */}
-              <div className="mt-5">
-                <h1 className="text-2xl text-center text-bold">
-                  Technicien
+              <div className="flex items-center justify-center">
+                <h1 className="text-xl text-semibold">
+                  technicien
                 </h1>
               </div>
 
-            {/* search */}
-              <div className="flex gap-2 items-center rounded-md bg-gray-100 mt-5 px-2 py-1 ml-2 mr-2">
-                <BsSearch className="text-gray-500 block float left cursor-pointer"/>
-                <input type="search" placeholder="search" className="text-base bg-transparent w-full focus:outline-none"/>
-              </div>
-
             {/* list tabs */}
-              <ul className="w-full flex flex-col gap-2 mt-4">
-                  <li className="flex items-center gap-1 ml-2 text-gray-700 rounded-md px-2 py-1 hover:bg-gray-300">
+              <ul className="w-full flex items-center justify-center gap-2">
+                  <li className="flex items-center gap-1 ml-2 text-gray-700 rounded-md px-2 py-1 hover:bg-gray-100">
                     <GoHome className="text-xl"/>
                     <NavLink to='/user'>Home</NavLink>
                   </li>
-                  <li className="flex items-center gap-1 ml-2 text-gray-700 rounded-md px-2 py-1 hover:bg-gray-300">
+                  <li className="flex items-center gap-1 ml-2 text-gray-700 rounded-md px-2 py-1 hover:bg-gray-100">
                     <CgEditUnmask />
                     <NavLink to='/user/materiel'>Materiels</NavLink>
                   </li>
-                  <li className="flex items-center gap-1 ml-2 text-gray-700 rounded-md px-2 py-1 hover:bg-gray-300">
+                  <li className="flex items-center gap-1 ml-2 text-gray-700 rounded-md px-2 py-1 hover:bg-gray-100">
                     <CgEditUnmask />
                     <NavLink to='/user/maintenance'>Maintenance</NavLink>
                   </li>
-                  <li className="flex items-center gap-1 ml-2 text-gray-700 rounded-md px-2 py-1 hover:bg-gray-300">
+                  <li className="flex items-center gap-1 ml-2 text-gray-700 rounded-md px-2 py-1 hover:bg-gray-100">
                     <Help />
                     <NavLink to='/user/apropos'>Apropos</NavLink>
                   </li>
               </ul>
             {/* logout */}
-              <button className="flex items-center gap-1 ml-4 text-gray-700 mt-50 cursor-pointer"
+            <div className="flex items-center">
+              <div className="p-3 bg-blue-100 rounded-full">
+                <FiUser className='text-blue-600 text-xl'/>
+              </div>
+            </div>
+
+              {/*<button className="flex items-center gap-1 cursor-pointer"
                 onClick={() => navigate("/login")}
               >
                   <CiLogout className="text-xl text-red-500"/>
                   <span>Logout</span>
-              </button>
+              </button>*/}
           </div>
-          <div className="w-full py-5 px-5">
+          <div className="w-full p-5">
             <Outlet/>
           </div>
         </div>
