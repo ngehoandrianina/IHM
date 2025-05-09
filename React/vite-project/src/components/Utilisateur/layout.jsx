@@ -1,52 +1,64 @@
-import { Outlet, Link ,NavLink} from "react-router-dom";
+import { Outlet, Link ,NavLink, useNavigate} from "react-router-dom";
 import {BsSearch} from "react-icons/bs"
 import {GoHome} from "react-icons/go"
 import {IoHelpCircleOutline as Help} from "react-icons/io5"
 import {CiLogout} from "react-icons/ci"
 import {CgEditUnmask} from "react-icons/cg"
 import NavBarUser from "./NavBarUser";
+import React, { useState } from "react";
+import { FiLayout, FiUser } from "react-icons/fi";
 
 
 function Layout(){
+    const navigate = useNavigate();
+    const [isOpen, setIsOpen] = useState(false);
     return(
-        <div className="flex">
-          <div className="h-screen w-60 bg-base-100 shadow-sm">
+        <div className="">
+          <div className="relative h-16 flex bg-base-100 px-5 shadow-md">
             {/* Title */}
-              <div className="mt-5">
-                <h1 className="text-2xl text-center text-bold">
-                  Utilisateur
+              <div className="flex items-center justify-center">
+                <h1 className="text-xl text-semibold">
+                  technicien
                 </h1>
               </div>
 
-            {/* search */}
-              <div className="flex gap-2 items-center rounded-md bg-gray-100 mt-5 px-2 py-1 ml-2 mr-2">
-                <BsSearch className="text-gray-500 block float left cursor-pointer"/>
-                <input type="search" placeholder="search" className="text-base bg-transparent w-full focus:outline-none"/>
-              </div>
-
             {/* list tabs */}
-              <ul className="w-full flex flex-col gap-2 mt-4">
-                  <li className="flex items-center gap-1 ml-2 text-gray-700 rounded-md px-2 py-1 hover:bg-gray-300">
+              <ul className="w-full flex items-center justify-center gap-2">
+                  <li className="flex items-center gap-1 ml-2 text-gray-700 rounded-md px-2 py-1 hover:bg-gray-100">
                     <GoHome className="text-xl"/>
                     <NavLink to='/user'>Home</NavLink>
                   </li>
-                  <li className="flex items-center gap-1 ml-2 text-gray-700 rounded-md px-2 py-1 hover:bg-gray-300">
+                  <li className="flex items-center gap-1 ml-2 text-gray-700 rounded-md px-2 py-1 hover:bg-gray-100">
                     <CgEditUnmask />
                     <NavLink to='/user/materiel'>Materiels</NavLink>
                   </li>
-                  <li className="flex items-center gap-1 ml-2 text-gray-700 rounded-md px-2 py-1 hover:bg-gray-300">
+                  <li className="flex items-center gap-1 ml-2 text-gray-700 rounded-md px-2 py-1 hover:bg-gray-100">
+                    <CgEditUnmask />
+                    <NavLink to='/user/maintenance'>Maintenance</NavLink>
+                  </li>
+                  <li className="flex items-center gap-1 ml-2 text-gray-700 rounded-md px-2 py-1 hover:bg-gray-100">
                     <Help />
                     <NavLink to='/user/apropos'>Apropos</NavLink>
                   </li>
               </ul>
             {/* logout */}
-              <button className="flex items-center gap-1 ml-3 text-gray-700 mt-50">
-                  <CiLogout className="text-xl text-red-500"/>
-                  <span>Logout</span>
-              </button>
+            <div className="flex items-center">
+              <div className="p-3 bg-blue-100 rounded-full">
+                <FiUser className='text-blue-600 text-xl cursor-pointer'
+                  onClick={()=> setIsOpen(!isOpen)}
+                />
+              </div>
+            </div>
+            <div className={`absolute w-40 h-25 top-16 right-2 flex flex-col justify-end items-center gap-2
+             bg-base-100 py-2 shadow-md ${isOpen ? "block": "hidden"}`}>
+                <h3 className="text-gray-500">Mr Robot</h3>
+                <CiLogout className="text-xl text-red-500 cursor-pointer" id="logout"
+                  onClick={()=>{ navigate('/login') }}
+                />
+            </div>
+
           </div>
-          <div className="w-full py-5 px-5">
-            <NavBarUser />
+          <div className="w-full p-5" onClick={()=> setIsOpen(false)}>
             <Outlet/>
           </div>
         </div>
