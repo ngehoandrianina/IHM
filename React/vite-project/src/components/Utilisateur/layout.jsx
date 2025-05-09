@@ -5,16 +5,16 @@ import {IoHelpCircleOutline as Help} from "react-icons/io5"
 import {CiLogout} from "react-icons/ci"
 import {CgEditUnmask} from "react-icons/cg"
 import NavBarUser from "./NavBarUser";
-import React from "react";
+import React, { useState } from "react";
 import { FiLayout, FiUser } from "react-icons/fi";
 
 
 function Layout(){
     const navigate = useNavigate();
-    
+    const [isOpen, setIsOpen] = useState(false);
     return(
         <div className="">
-          <div className="h-16 flex bg-base-100 px-5 shadow-md">
+          <div className="relative h-16 flex bg-base-100 px-5 shadow-md">
             {/* Title */}
               <div className="flex items-center justify-center">
                 <h1 className="text-xl text-semibold">
@@ -44,18 +44,21 @@ function Layout(){
             {/* logout */}
             <div className="flex items-center">
               <div className="p-3 bg-blue-100 rounded-full">
-                <FiUser className='text-blue-600 text-xl'/>
+                <FiUser className='text-blue-600 text-xl cursor-pointer'
+                  onClick={()=> setIsOpen(!isOpen)}
+                />
               </div>
             </div>
+            <div className={`absolute w-40 h-25 top-16 right-2 flex flex-col justify-end items-center gap-2
+             bg-base-100 py-2 shadow-md ${isOpen ? "block": "hidden"}`}>
+                <h3 className="text-gray-500">Mr Robot</h3>
+                <CiLogout className="text-xl text-red-500 cursor-pointer" id="logout"
+                  onClick={()=>{ navigate('/login') }}
+                />
+            </div>
 
-              {/*<button className="flex items-center gap-1 cursor-pointer"
-                onClick={() => navigate("/login")}
-              >
-                  <CiLogout className="text-xl text-red-500"/>
-                  <span>Logout</span>
-              </button>*/}
           </div>
-          <div className="w-full p-5">
+          <div className="w-full p-5" onClick={()=> setIsOpen(false)}>
             <Outlet/>
           </div>
         </div>
