@@ -1,7 +1,64 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
+import axios from 'axios'
+import { toast } from 'react-toastify'
+const FairePre = ({show,setShow,matSelected}) => {
+  const [nom,setNom] = useState('')
+  const [Mat,setMat]=useState({})
+  const [IdMat,setIdMat]=useState([])
+  const [Utilisateur,setUtilisateur]= useState({})
+  const [dateFin,setDateFin] = useState('')
+  useEffect(()=>{
+    axios.get('http://127.0.0.1:8000/materielle/utilisateur')
+    .then((res)=>{
+        if(res.data){
+          setUtilisateur(res.data)
+        }
+        else{
+          setUtilisateur([])
+        }
+        console.log(res.data)
+    })
+    .catch((err)=>{
+        console.log(err)
+        setUtilisateur([])
+    })
+    setMat(matSelected)
+  
+  },[show])
+  //Decocher
+  const Decocher =(id)=>{
+    setMat(prev=> prev.filter(item => item.id !== id))
+  }
+  //Suggestion d'utilisateur
+  const [Suggestion,setSuggestion] = useState([])
+  const [nomUtilisateur,setNomUtilisateur] = useState('')
+  const [SelectedID,setSelectedId] = useState('')
+  //AJouter Pret
 
-const FairePre = ({show,setShow}) => {
+  const AjoutPret = (e)=>{
+  e.preventDefault()
+  Mat.forEach(mat =>{
+  try{
+   axios.post('http://127.0.0.1:8000/materielle/demandes-pret/',{
+      demandeur_id:SelectedID,
+      materiel_id:mat.id,
+      date_fin:dateFin
+    })
+    .then((res)=>{
+      toast.success('Emprut Ajouter Avec success')
+    })
+    .catch((err)=>{
+      toast.error('Error')
+      console.log(err)
+    })
+    
+  }
+  catch(err){
+    console.log(err)
+  }
+    })
+  }
   return (
     <>
     {
@@ -18,22 +75,54 @@ const FairePre = ({show,setShow}) => {
             <h1 className='text-white'>Faire un pret</h1>
         </div>
      </div>
-     <div className='w-[50%] h-[100%]'>
-     <form className='flex flex-col justify-evenly p-4 h-[100%]'>
+     <div className='w-[80%] h-[100%] flex flex-row '>
+      <div className=' w-[50%] py-4'>
+        <h1 className='text-center text-xl'>Liste des materielle a umprunter</h1>
+        <ul>
+            
+            {
+              Mat.map((mat)=>(
+                <li key={mat.id} className='mt-2 px-4 py-2  flex flex-row justify-between'>{mat.nom}
+                <button onClick={()=>Decocher(mat.id)} className='px-4 bg-secondary rounded-xl text-white font-bold'>X</button></li>
+              ))
+            }
+        </ul>
+      </div>
+     <form className='flex flex-col justify-between px-4 pt-4 h-[100%] w-[50%] pb-8'>
         <div className='flex flex-col'>
-        <input class="p-2 mt-8 rounded-xl border" type="text" name="type"  placeholder="type" />
-        <input class="p-2 mt-8 rounded-xl border" type="text" name="date_acquisition"  placeholder="dateAq" />
-        <input class="p-2 mt-8 rounded-xl border" type="text" name="etat" placeholder="etat" />
-        <input class="p-2 mt-8 rounded-xl border" type="text" name="type"  placeholder="type" />
+        <h1 className='text-xl'>Information de l'utilisateur</h1>
+        <input class="p-2 mt-4 rounded-xl border" type="text" name="type"  placeholder="Nom demandeur"
+        value={nomUtilisateur}
+        onChange={(e)=>{
+          const value = e.target.value
+          setNomUtilisateur(value)
+          const Filtrage = Utilisateur.filter(user=>user.username.toLowerCase().includes(value.toLowerCase()))
+          setSuggestion(Filtrage)
+        }}
+        />
+        <ul className=' bg-[#26232339] flex flex-col gap-2 px-2 -mt-1'>
+          {
+            Suggestion && Suggestion.map((User)=>(
+              <li key={User.id} 
+              className='cursor-pointer hover:bg-primary'
+              onClick={()=>{
+                setSelectedId(User.id)
+                setSuggestion([])
+                setNomUtilisateur(User.username)
+              }}>{User.username}</li>
+            ))
+          }
+        </ul>
+        <input value={dateFin} onChange={(e)=>setDateFin(e.target.value)}  class="p-2 mt-8 rounded-xl border" type="datetime-local" placeholder="Nom demandeur"/>
         </div>
         <div className='w-[100%] flex items-center justify-end gap-6'>
         <button  className='px-6 border border-primary text-primary
         py-2 rounded-xl hover:scale-105 duration-300
         font-medium flex flex-row items-center justify-center'>Annuler
         </button>
-        <button  className='px-6 bg-primary text-white
+        <button  onClick={(e)=>AjoutPret(e)} className='px-6 bg-primary text-white
         py-2 rounded-xl hover:scale-105 duration-300
-        font-medium flex flex-row items-center justify-center'>Ajouter<img src='/icone/valide.png' className='w-6 ml-2 '/>
+        font-medium flex flex-row items-center justify-center'>Valider<img src='/icone/valide.png' className='w-6 ml-2 '/>
         </button>
         </div>
         </form>

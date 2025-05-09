@@ -1,5 +1,6 @@
 import React from 'react'
-
+import { FaAlgolia } from "react-icons/fa";
+import MyLineChart from './MyLineChart'
 const Dashboard = () => {
   return (
     <>
@@ -10,48 +11,53 @@ const Dashboard = () => {
             <p className='font-bold'>{'>'}</p>
           </div>
           <div className='flex flex-row justify-between items-center'>
+          <img src='/icone/total.png' className='w-12 rounded-4xl' />
           <h1 className='text-4xl'>1</h1>
-          <img src='/gestionmat.webp' className='w-20 rounded-4xl' />
+          
           </div>
         </div>
         <div className=' bg-white p-2 rounded-2xl shadow w-56 px-4 ' >
         <div className='flex flex-row justify-between items-center'>
-            <p className='font-thin text-[15px]'>Nombre total materiel</p>
+            <p className='font-thin text-[15px]'>Materiel Disponible</p>
             <p className='font-bold'>{'>'}</p>
           </div>
           <div className='flex flex-row justify-between items-center'>
+          <img src='/icone/dispo.png' className='w-12 rounded-4xl' />
           <h1 className='text-4xl'>1</h1>
-          <img src='/gestionmat.webp' className='w-20 rounded-4xl' />
+          
           </div>
         </div>
         <div className=' bg-white p-2 rounded-2xl shadow w-56 px-4 ' >
         <div className='flex flex-row justify-between items-center'>
-            <p className='font-thin text-[15px]'>Nombre total materiel</p>
+            <p className='font-thin text-[15px]'>Materiel en pret</p>
             <p className='font-bold'>{'>'}</p>
           </div>
           <div className='flex flex-row justify-between items-center'>
+          <img src='/icone/pret.png' className='w-12 rounded-4xl' />
           <h1 className='text-4xl'>1</h1>
-          <img src='/gestionmat.webp' className='w-20 rounded-4xl' />
+          
           </div>
         </div>
         <div className=' bg-white p-2 rounded-2xl shadow w-56 px-4 ' >
         <div className='flex flex-row justify-between items-center'>
-            <p className='font-thin text-[15px]'>Nombre total materiel</p>
+            <p className='font-thin text-[15px]'>Materiel en panne</p>
             <p className='font-bold'>{'>'}</p>
           </div>
           <div className='flex flex-row justify-between items-center'>
+          <img src='/icone/panne2.png' className='w-12 rounded-4xl' />
           <h1 className='text-4xl'>1</h1>
-          <img src='/gestionmat.webp' className='w-20 rounded-4xl' />
+         
           </div>
         </div>
         <div className=' bg-white p-2 rounded-2xl shadow w-56 px-4 ' >
         <div className='flex flex-row justify-between items-center'>
-            <p className='font-thin text-[15px]'>Nombre total materiel</p>
+            <p className='font-thin text-[15px]'>Materiel en Maitenance</p>
             <p className='font-bold'>{'>'}</p>
           </div>
           <div className='flex flex-row justify-between items-center'>
+          <img src='/icone/maintenance2.png' className='w-12 rounded-4xl' />
           <h1 className='text-4xl'>1</h1>
-          <img src='/gestionmat.webp' className='w-20 rounded-4xl' />
+          
           </div>
         </div>
       </div>
@@ -68,7 +74,7 @@ const Dashboard = () => {
         </div>
         <div>
           <h>Statistique des materielle</h>
-
+          <MyLineChart />
         </div>
           
       </div>

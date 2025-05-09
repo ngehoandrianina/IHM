@@ -1,15 +1,49 @@
-import React, { useEffect, useState } from 'react'
+import React,{useEffect,useState} from 'react'
 import axios from 'axios'
-import AjoutMateriel from './AjoutMateriel'
-import Swal from 'sweetalert2';
-import withReactContent from 'sweetalert2-react-content';
-const MySwal = withReactContent(Swal);
-
-const Materielle = () => {
-    const [showAdd,setShowAdd] = useState(false)
+import FairePre from './FairePre'
+const MaterielDispo = () => {
     const [materiel,setMateriel] = useState([])
+    const [Group,setGroup] = useState({})
     const [refesh,setRefresh] = useState(false)
-    //pagination
+    const [type,setType] = useState([])
+    const [show,setShow] = useState(false)
+    useEffect(()=>{
+        axios.get('http://127.0.0.1:8000/materielle/materiels')
+        .then((res)=>{
+            if(res.data){
+                setMateriel(res.data.filter(item => item.etat === 'Disponible'))
+                const data = res.data
+                const Type = [...new Set(data.map(item => item.type))]
+                setType(Type)
+            }
+            else{
+                setMateriel([])
+            }
+            console.log(res.data)
+        })
+        .catch((err)=>{
+            console.log(err)
+            setMateriel([])
+        })
+        },[])
+    //Regroupement
+    useEffect(()=>{
+        const regroupement = {};
+        materiel.forEach((mat)=>{
+            if(!regroupement[mat.type]){
+                regroupement[mat.type] = [];
+            }
+            regroupement[mat.type].push(mat)
+        })
+        setGroup(regroupement)
+        
+    },[materiel])
+        //Selection Type
+        const [selectedType,setSelectedType]=useState('')
+        const handleType =(type)=>{
+            selectedType(type)
+        }
+     //pagination
     const [page,setPage] = useState(0)
     const itemPerPage = 6;
     const TotalPage = Math.ceil(materiel.length / itemPerPage)
@@ -26,88 +60,52 @@ const Materielle = () => {
             setPage(page - 1)
         }
     }
-    //pagination
-    //GetMAterielle
-    useEffect(()=>{
-    axios.get('http://127.0.0.1:8000/materielle/materiels')
-    .then((res)=>{
-        if(res.data){
-            setMateriel(res.data)
+    //Materiele Selectionner
+    const [SelectedMat,setSelectedMat] = useState([])
+
+    const MatSelect = (Materiel)=>{
+     setSelectedMat((prev)=>{
+        const exist = prev.find(item => item.id === Materiel.id)
+        if(exist){
+            return prev.filter(item=>item.id !== Materiel.id)
         }
         else{
-            setMateriel([])
+            return [...prev,{id:Materiel.id,nom:Materiel.nom}]
         }
-        console.log(res.data)
-    })
-    .catch((err)=>{
-        console.log(err)
-        setMateriel([])
-    })
-    },[refesh])
-    //Delete
-    const DeleteMateriel = (id) =>{
-        MySwal.fire({
-            title: 'Êtes-vous sûr ?',
-            text: "Cette action est irréversible.",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#d33',
-            cancelButtonColor: '#3085d6',
-            confirmButtonText: 'Oui, supprimer',
-            cancelButtonText: 'Annuler',
-        }).then((res)=>{
-            if(res.isConfirmed){
-                axios.delete(`http://127.0.0.1:8000/materielle/materiels/${id}/`)
-            .then((res)=>{
-                MySwal.fire('Supprimer avec succes','element suprimer','success')
-                setRefresh((prev)=>!prev)
-            })
-            .catch((err)=>{
-                console.log(err)
-            })
-            }
-        });
+     })
+        
     }
-    const [DataUpdate,SetDataUpdate]=useState({})
-    const [Update,SetUpdate]=useState(false)
-const editMateriel =(data)=>{
-    SetDataUpdate(data)
-    setShowAdd(true)
-    SetUpdate(true)
-}
+    
   return (
-   <>
-    <div class="flex flex-col overflow-hidden relative">
+    <>
+    <div class="flex flex-col overflow-hidden relative ">
       <div class="overflow-x-auto">
-        <div class="min-w-full inline-block align-middle shadow-2xl">
-            <div class="relative mt-2 flex items-center justify-between text-gray-500 focus-within:text-gray-900 mb-2 bg-white p-2 rounded-2xl shadow-sm">
-                <input type="text" id="default-search" class="block w-80 h-11 pr-5 pl-12 py-2.5 text-base font-normal shadow-xs text-gray-900 bg-transparent border border-gray-300 rounded-full placeholder-gray-400 focus:outline-none" placeholder="Search for user" />
-                <button onClick={()=>setShowAdd(true)} className='border px-6 py-2 rounded-4xl bg-secondary text-white'>+ Add</button>
+        <div class="min-w-full inline-block align-middle shadow-2xl h-[100%] ">
+            <div class=" mt-2 flex items-center justify-between text-gray-500 focus-within:text-gray-900 mb-2 bg-white p-2 rounded-2xl shadow-sm">
+                <input type="text" id="default-search" class="block w-80 h-11 pr-5 pl-12 py-2.5 text-base font-normal shadow-xs text-gray-900 bg-transparent border border-gray-300 rounded-full placeholder-gray-400 focus:outline-none" placeholder="Rechercher Materiel" />
+                <button onClick={()=>setShow(true)} className='border px-6 py-2 rounded-4xl bg-secondary text-white'>Faire Pret</button>
             </div>
             <div className='flex flex-row items-center justify-between mb-2 bg-white p-2 rounded-2xl shadow-sm'>
             <ul className='flex gap-2 '>
                 <li className='bg-secondary px-6 py-1 rounded-2xl'>All</li>
-                <li className=' px-6 py-1 rounded-2xl'>Etat</li>
-                <li className=' px-6 py-1 rounded-2xl'>Salle</li>
-                <li className=' px-6 py-1 rounded-2xl'>Departemet</li>
+                {
+                    type.map((type,idx)=>(
+                        <li onClick={()=>handleType(type)} key={idx} className='px-6 py-1 rounded-2xl border'>{type}</li>
+                    ))
+                }
             </ul>
             
             </div>
-            <div class="overflow-hidden dark:bg-black p-2 bg-white rounded-2xl shadow-sm ">
+            {/*<div class="overflow-hidden dark:bg-black p-2 bg-white rounded-2xl shadow-sm ">
                 <table class="min-w-full rounded-xl dark:bg-black">
                     <thead>
                         <tr class="bg-white border-b-4">
                             <th scope="col" class="p-3  text-left text-lg leading-6 font-semibold capitalize rounded-tl-xl"> ID </th>
                             <th scope="col" class="p-3 text-left text-lg leading-6 font-semibold  capitalize">Nom </th>
                             <th scope="col" class="p-3 text-left text-lg leading-6 font-semibold  capitalize"> Type </th>
-                            <th scope="col" class="p-3 text-left text-lg leading-6 font-semibold  capitalize"> Marque</th>
-                            <th scope="col" class="p-3 text-left text-lg leading-6 font-semibold  capitalize"> Model</th>
                             <th scope="col" class="p-3 text-left text-lg leading-6 font-semibold  capitalize"> Numero de Serie</th>
                             <th scope="col" class="p-3 text-left text-lg leading-6 font-semibold  capitalize"> Etat</th>
-                            <th scope="col" class="p-3 text-left text-lg leading-6 font-semibold  capitalize"> Date Aquisition</th>
-                            <th scope="col" class="p-3 text-left text-lg leading-6 font-semibold  capitalize"> Salle</th>
-                            <th scope="col" class="p-3 text-left text-lg leading-6 font-semibold  capitalize"> Departemet</th>
-                            <th scope="col" class="p-3 text-left text-lg leading-6 font-semibold  capitalize rounded-tr-xl"> Actions </th>
+                            <th scope="col" class="p-3 w-10 text-left text-lg leading-6 font-semibold  capitalize rounded-tr-xl"> Selectioner </th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-300 ">
@@ -117,22 +115,42 @@ const editMateriel =(data)=>{
                                     <td className="p-3 text-left text-lg leading-6 ">{mat.id}</td>
                                     <td className="p-3 text-left text-lg leading-6 ">{mat.nom}</td>
                                     <td className="p-3 text-left text-lg leading-6 ">{mat.type}</td>
-                                    <td className="p-3 text-left text-lg leading-6 ">{mat.marque}</td>
-                                    <td className="p-3 text-left text-lg leading-6 ">{mat.modele}</td>
                                     <td className="p-3 text-left text-lg leading-6 ">{mat.numero_serie}</td>
                                     <td className="p-3 text-left text-lg leading-6 ">{mat.etat}</td>
-                                    <td className="p-3 text-left text-lg leading-6 ">{mat.date_acquisition}</td>
-                                    <td className="p-3 text-left text-lg leading-6 ">{mat.salle ? mat.salle:'Null'}</td>
-                                    <td className="p-3 text-left text-lg leading-6 ">{mat.departement}</td>
-                                    <td className="p-3 text-left text-lg leading-6 flex items-center justify-between px-4 ">
-                                       <button onClick={()=>editMateriel(mat)} ><img src='/icone/edit.png' className='w-10 hover:border rounded-full p-2'/></button>
-                                       <button onClick={()=>DeleteMateriel(mat.id)}><img src='/icone/delete.png' className='w-10 hover:border rounded-full p-2' /></button>
+                                    <td className="p-3 flex items-center justify-center">
+                                       <input type='checkbox' className='w-10' 
+                                       checked={SelectedMat.includes(mat.id)} 
+                                       onChange={()=>MatSelect(mat.id)}
+                                        />
                                     </td>
                                 </tr>
                             )))
                         }
                     </tbody>
-                </table>
+                    </table>
+            </div>*/}
+            <div className='flex gap-3 flex-wrap items-center justify-start h-[100%] '>
+           
+            {
+                Object.entries(Group).map(([type,liste])=>(
+                <div key={type} class="overflow-hidden dark:bg-black p-2 bg-white rounded-2xl shadow-sm w-50  min-h-52">
+                    <h1 className='text-center text-xl'>{type}</h1>
+                    <ul className='flex flex-col gap-2 mt-2'>
+                    {
+                        liste.map((mat)=>(
+                            <li key={mat.id} className='flex justify-around'>{mat.nom} 
+                            <input type='checkbox' 
+                            checked={SelectedMat.some(m => m.id  === mat.id)} 
+                            onChange={()=>MatSelect(mat)} 
+                            />
+                            </li>                        
+                            
+                            ))
+                    }
+                    </ul>
+                </div>
+                ))
+            }
             </div>
         </div>
       </div>
@@ -165,9 +183,9 @@ const editMateriel =(data)=>{
         </div>
       
       </div>
-     <AjoutMateriel DataUpdate={DataUpdate} Update={Update} SetUpdate={SetUpdate} show={showAdd} setShow={setShowAdd} refresh={setRefresh} />
+      <FairePre show={show} setShow={setShow} matSelected={SelectedMat} />
    </>
   )
 }
 
-export default Materielle
+export default MaterielDispo

@@ -6,6 +6,7 @@ class UtilisateurSerializer(serializers.ModelSerializer):
     class Meta:
         model = Utilisateur
         fields = ['id', 'username', 'email', 'role','departement']
+    
 
 class MaterielSerializer(serializers.ModelSerializer):
     class Meta:
@@ -15,6 +16,8 @@ class MaterielSerializer(serializers.ModelSerializer):
 class DemandePretSerializer(serializers.ModelSerializer):
     materiel = MaterielSerializer(read_only=True)
     demandeur = UtilisateurSerializer(read_only=True)
+    demandeur_id = serializers.IntegerField(write_only=True)
+    materiel_id = serializers.IntegerField(write_only=True)
     class Meta:
         model = DemandePret
         fields = '__all__'
@@ -38,7 +41,7 @@ class MaintenaceSerializer(serializers.ModelSerializer):
 ##creation USer
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
-    password = serializers.CharField(write_only=True, required=True)
+    password = serializers.CharField(write_only=True)
     class Meta:
         model = Utilisateur
         fields = ['username', 'password', 'email', 'role', 'departement']

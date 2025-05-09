@@ -3,7 +3,9 @@ from .models import Utilisateur, Materiel, DemandePret, SignalementPanne, Mainte
 from .serializers import MaterielSerializer, DemandePretSerializer,UtilisateurSerializer,SalleSerializer,MaintenaceSerializer,SignalementPanneSerializer,UserRegistrationSerializer
 from django.http import JsonResponse
 from rest_framework.response import Response
-
+from collections import defaultdict
+from rest_framework.decorators import action
+from django.db import transaction
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -21,8 +23,43 @@ class MaterielViewSet(viewsets.ModelViewSet):
 class DemandePretViewSet(viewsets.ModelViewSet):
     queryset = DemandePret.objects.all()
     serializer_class = DemandePretSerializer
-    def perform_create(self, serializer):
-        serializer.save(demandeur=self.request.user)
+    
+    @action(detail=False, methods=['post'], url_path='terminer-tous/(?P<user_id>[^/.]+)')
+    def terminer_tous_les_prets(self, request, user_id=None):
+        try:
+            utilisateur = Utilisateur.objects.get(pk=user_id)
+            
+            with transaction.atomic():
+                # Récupérer toutes les demandes actives de l'utilisateur
+                demandes_actives = DemandePret.objects.filter(
+                    demandeur=utilisateur,
+                    etat='Validé'  # ou tout autre état qui signifie "prêt en cours"
+                )
+                # Mettre à jour chaque demande et chaque matériel
+                for demande in demandes_actives:
+                    demande.etat = 'Terminé'
+                    demande.save()
+                    
+                    materiel = demande.materiel
+                    materiel.etat = 'Disponible'
+                    materiel.save()
+                
+                count = demandes_actives.count()
+                return Response({
+                    'status': f'{count} prêt(s) terminé(s)',
+                    'materiels_liberes': count
+                }, status=status.HTTP_200_OK)
+                
+        except Utilisateur.DoesNotExist:
+            return Response(
+                {'error': 'Utilisateur non trouvé'},
+                status=status.HTTP_404_NOT_FOUND
+            )
+        except Exception as e:
+            return Response(
+                {'error': str(e)},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
 
 class UtilisateurViewSet(viewsets.ModelViewSet):
     queryset = Utilisateur.objects.all()

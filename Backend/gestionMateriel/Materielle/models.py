@@ -70,17 +70,15 @@ class Materiel(models.Model):
 
 class DemandePret(models.Model):
     ETAT_CHOICES = [
-        ('En attente', 'En attente'),
         ('Validé', 'Validé'),
-        ('Refusé', 'Refusé'),
         ('Terminé', 'Terminé'),
+        ('Retourner','Retourner')
     ]
     demandeur = models.ForeignKey(Utilisateur, on_delete=models.CASCADE)
     materiel = models.ForeignKey(Materiel, on_delete=models.CASCADE)
-    date_demande = models.DateTimeField(auto_now_add=True)
-    date_debut = models.DateField()
-    date_fin = models.DateField()
-    etat = models.CharField(max_length=20, choices=ETAT_CHOICES, default='En attente')
+    date_debut = models.DateTimeField(auto_now_add=True)
+    date_fin = models.DateTimeField()
+    etat = models.CharField(max_length=20, choices=ETAT_CHOICES, default='Validé')
     
     class Meta:
         verbose_name = "Demande de prêt"
@@ -88,6 +86,13 @@ class DemandePret(models.Model):
     
     def __str__(self):
         return f"Demande #{self.id} - {self.materiel}"
+    def save(self, *args, **kwargs):
+        # Si c'est une nouvelle demande (pas une mise à jour)
+        if self._state.adding:
+            # Mettre à jour l'état du matériel
+            self.materiel.etat = 'En pret'
+            self.materiel.save()
+        super().save(*args, **kwargs)
 
 class SignalementPanne(models.Model):
     ETAT_CHOICES = [

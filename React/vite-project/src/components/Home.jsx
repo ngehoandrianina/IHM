@@ -7,6 +7,7 @@ import Maitenance from './Maitenance';
 import DemandePret from './DemandePret';
 import Salle from './Salle';
 import Utilisateur from './Utilisateur';
+import MaterielDispo from './MaterielDispo';
 import {ToastContainer} from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -29,6 +30,8 @@ const Home = () => {
             return <DemandePret />;
         case 'salle':
             return <Salle />;
+        case 'materielleDispo':
+          return <MaterielDispo />
       default:
         return <h2>Page non trouvée</h2>;
     }
@@ -45,7 +48,9 @@ const Home = () => {
         <div className='h-screen w-screen flex flex-col items-center justify-start px-4'>
             <div className='flex items-center justify-between h-15 w-full bg-white rounded-2xl mt-2 px-4 shadow-sm'>
                 <h1 className='text-primary'>Admin</h1>
-                <h1>Deconnecter</h1>
+                <select>
+                  <option>Se deconnecter</option>
+                </select>
             </div>
             <div  className='w-full' >
                 {
