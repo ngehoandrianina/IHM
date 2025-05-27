@@ -54,7 +54,7 @@ class Materiel(models.Model):
         ('En panne', 'En panne'),
         ('Repare', 'Réparé'),
         ('Hors service', 'Hors service'),
-        ('Pour Salle','Pour Salle')
+        ('En Maintenance','En Maintenance')
     ]
     nom = models.CharField(max_length=100)
     type = models.CharField(max_length=100)
@@ -70,15 +70,15 @@ class Materiel(models.Model):
 
 class DemandePret(models.Model):
     ETAT_CHOICES = [
-        ('Validé', 'Validé'),
-        ('Terminé', 'Terminé'),
-        ('Retourner','Retourner')
+        ('En cours', 'En cours'),
+        ('En retard', 'En retard'),
+        ('Rendu','Rendu')
     ]
     demandeur = models.ForeignKey(Utilisateur, on_delete=models.CASCADE)
     materiel = models.ForeignKey(Materiel, on_delete=models.CASCADE)
     date_debut = models.DateTimeField(auto_now_add=True)
     date_fin = models.DateTimeField()
-    etat = models.CharField(max_length=20, choices=ETAT_CHOICES, default='Validé')
+    etat = models.CharField(max_length=20, choices=ETAT_CHOICES, default='En cours')
     
     class Meta:
         verbose_name = "Demande de prêt"
@@ -93,12 +93,14 @@ class DemandePret(models.Model):
             self.materiel.etat = 'En pret'
             self.materiel.save()
         super().save(*args, **kwargs)
+        
 
 class SignalementPanne(models.Model):
     ETAT_CHOICES = [
         ('Non traité', 'Non traité'),
         ('En cours', 'En cours'),
-        ('Résolu', 'Résolu'),
+        ('Resolu', 'Resolu'),
+        ('Non Resolu','Non Resolu')
     ]
     
     materiel = models.ForeignKey(Materiel, on_delete=models.CASCADE)
@@ -113,11 +115,18 @@ class SignalementPanne(models.Model):
     
     def __str__(self):
         return f"Panne #{self.id} - {self.materiel}"
+    def save(self, *args, **kwargs):
+        # Si c'est une nouvelle demande (pas une mise à jour)
+        if self._state.adding:
+            # Mettre à jour l'état du matériel
+            self.materiel.etat = 'En panne'
+            self.materiel.save()
+        super().save(*args, **kwargs)
 
 class Maintenance(models.Model):
     signalement = models.ForeignKey(SignalementPanne, on_delete=models.CASCADE)
     technicien = models.ForeignKey(Utilisateur, on_delete=models.SET_NULL, null=True, limit_choices_to={'role': 'Technicien'})
-    date_intervention = models.DateField()
+    date_intervention = models.DateField(auto_now_add=True)
     description = models.TextField()
     
     class Meta:
@@ -126,3 +135,11 @@ class Maintenance(models.Model):
     
     def __str__(self):
         return f"Maintenance #{self.id} - {self.signalement.materiel}"
+    def save(self, *args, **kwargs):
+        # Si c'est une nouvelle demande (pas une mise à jour)
+        if self._state.adding and self.signalement_id:
+            # Mettre à jour l'état du matériel
+            self.signalement.etat = 'En cours'
+            self.signalement.save()
+        super().save(*args, **kwargs)
+    

@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Route,BrowserRouter,Routes } from 'react-router-dom'
 import './App.css'
+//import 'antd/dist/reset.css';
 import Home from './components/Home'
 import Login from './components/Utilisateur/Login'
 import UserPage from './components/Utilisateur/UserPage'
@@ -12,6 +13,7 @@ import Materiels from './components/Utilisateur/materiels'
 import Maintenance from './components/Utilisateur/maintenance'
 import Apropos from './components/Utilisateur/apropos'
 import Signup from './components/Utilisateur/signup'
+import PrivateRoute from './Service/PrivateRoute'
 
 
 function App() {
@@ -20,14 +22,18 @@ function App() {
     <>
         <BrowserRouter>
             <Routes>
-                <Route path='/' element={<Home />} />
                 <Route path='/login' element={<Signin />} />
+                <Route element={<PrivateRoute requiredRole='Administrateur' />}>
+                  <Route path='/Admin' element={<Home />} />
+                </Route>
                 <Route path='/signup' element={<Signup/>}/>
+                <Route element={<PrivateRoute requiredRole='Technicien' />}>
                 <Route path='/user' element={<Layout />}>
                     <Route index element={<WelcomePage />} />
                     <Route path='/user/materiel' element={<Materiels />} />
                     <Route path='/user/maintenance' element={<Maintenance/>}/>
                     <Route path='/user/apropos' element={<Apropos/>} />
+                </Route>
                 </Route>
             </Routes>
         </BrowserRouter>

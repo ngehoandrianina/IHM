@@ -2,7 +2,9 @@ import { useState } from "react"
 import image from './../../assets/bg-materiel.jpg'
 import { Navigate, useNavigate } from "react-router-dom";
 import Validate from "./validate";
-
+import axios from "axios";
+import {toast,ToastContainer} from 'react-toastify'
+import authService from "../../Service/authService";
 export default function Signin() {
     const navigate = useNavigate();
     const [data, setData] = useState({
@@ -17,17 +19,45 @@ export default function Signin() {
         setData({...data, [e.target.name]: e.target.value});
 
     }
-    const handleSubmit = (e) =>{
+    const handleSubmit = async (e) =>{
         e.preventDefault();
         setErrors(Validate(data));
         if(errors.userName === "" && errors.password === ""){
             console.log(data);
-            navigate('/')
+            navigate('/login')
         }
-        //send data to api
+        try{
+            await authService.login(data.userName, data.password);
+            const user = authService.getCurrentUser();
+            switch(user.role) {
+                case 'Administrateur':
+                  navigate('/Admin');
+                  toast.success('Administrateur')
+                  break;
+                case 'Technicien':
+                  navigate('/user');
+                  break;
+                case 'Enseignant':
+                  navigate('/enseignant');
+                  break;
+                case 'Etudiant':
+                    toast.success('Etudiant')
+                  //navigate('/etudiant');
+                  break;
+                case 'ResponsableDep':
+                  navigate('/responsable');
+                  break;
+                default:
+                  navigate('/login');
+              }
+        }
+        catch(err){
+            console.log(err)
+        }
     }
     return(
         <section className="mt-10">
+            <ToastContainer />
             <div className="max-w-md mx-auto p-10 bg-white rounded-lg shadow-md">
                 <h1 className="text-2xl text-gray-950 font-bold mb-5">Log in</h1>
 
@@ -80,17 +110,11 @@ export default function Signin() {
                         className="w-full bg-gray-950 text-white py-2 px-4 rounded-md hover:bg-gray-700 transition duration-200 
                         focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
                     >
-                        Log in
+                        Connexion
                     </button>
 
                 </form>
 
-                <p className="text-sm text-gray-500 mt-8">
-                    Don't have an account? 
-                    <a href="/signup" className="text-blue-600 ml-1 hover:underline">
-                        Create account.
-                    </a>
-                </p>
             </div>
         </section>
     )

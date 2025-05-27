@@ -7,8 +7,13 @@ class UtilisateurSerializer(serializers.ModelSerializer):
         model = Utilisateur
         fields = ['id', 'username', 'email', 'role','departement']
     
-
+class SalleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Salle
+        fields = '__all__'
 class MaterielSerializer(serializers.ModelSerializer):
+    salle = SalleSerializer(read_only = True)
+    salle_id = serializers.IntegerField(write_only=True)
     class Meta:
         model = Materiel
         fields = '__all__'
@@ -22,18 +27,22 @@ class DemandePretSerializer(serializers.ModelSerializer):
         model = DemandePret
         fields = '__all__'
 
-class SalleSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Salle
-        fields = '__all__'
+
 
 class SignalementPanneSerializer(serializers.ModelSerializer):
-    
+    utilisateur = UtilisateurSerializer(read_only = True)
+    materiel = MaterielSerializer(read_only = True)
+    utilisateur_id = serializers.IntegerField(write_only = True)
+    materiel_id = serializers.IntegerField(write_only = True)
     class Meta:
         model = SignalementPanne
         fields = '__all__'
 
 class MaintenaceSerializer(serializers.ModelSerializer):
+    technicien = UtilisateurSerializer(read_only = True)
+    signalement = SignalementPanneSerializer(read_only = True)
+    technicien_id = serializers.IntegerField(write_only=True)
+    signalement_id = serializers.IntegerField(write_only=True)
     class Meta:
         model = Maintenance
         fields = '__all__'

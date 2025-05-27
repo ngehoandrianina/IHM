@@ -3,26 +3,29 @@ import {
     LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer
   } from 'recharts';
   
-  const data = [
-    { mois: 'Jan', pannes: 2 },
-    { mois: 'Fév', pannes: 5 },
-    { mois: 'Mar', pannes: 3 },
-    { mois: 'Avr', pannes: 4 },
-    { mois: 'Mai', pannes: 6 },
-    { mois: 'Juin', pannes: 1 },
-  ];
 
-const MyLineChart = () => {
+const MyLineChart = ({data}) => {
+
+
+  const marqueCounts = data.reduce((acc, item) => {
+    acc[item.marque] = (acc[item.marque] || 0) + 1;
+    return acc;
+  }, {});
+  
+  const lineChartData = Object.entries(marqueCounts).map(([marque, count]) => ({
+    marque,
+    count,
+  }));
   return (
-    <div className="w-full h-64">
-      <ResponsiveContainer width="100%" height="100%">
-        <LineChart data={data}>
+    <div className="w-full h-60 ">
+      <ResponsiveContainer width="100%" height="100%" >
+        <LineChart data={lineChartData}>
           <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="mois" />
+          <XAxis dataKey="marque" />
           <YAxis />
           <Tooltip />
           <Legend />
-          <Line type="monotone" dataKey="pannes" stroke="#8884d8" strokeWidth={2} />
+          <Line type="monotone" dataKey="count" stroke="#8884d8" strokeWidth={4} />
         </LineChart>
       </ResponsiveContainer>
     </div>

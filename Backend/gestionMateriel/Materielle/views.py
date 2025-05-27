@@ -6,6 +6,8 @@ from rest_framework.response import Response
 from collections import defaultdict
 from rest_framework.decorators import action
 from django.db import transaction
+from rest_framework.decorators import api_view
+from django.utils import timezone
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -33,11 +35,47 @@ class DemandePretViewSet(viewsets.ModelViewSet):
                 # Récupérer toutes les demandes actives de l'utilisateur
                 demandes_actives = DemandePret.objects.filter(
                     demandeur=utilisateur,
-                    etat='Validé'  # ou tout autre état qui signifie "prêt en cours"
+                    etat='En cours'   # ou tout autre état qui signifie "prêt en cours"
                 )
                 # Mettre à jour chaque demande et chaque matériel
                 for demande in demandes_actives:
-                    demande.etat = 'Terminé'
+                    demande.etat = 'Rendu'
+                    demande.save()
+                    
+                    materiel = demande.materiel
+                    materiel.etat = 'Disponible'
+                    materiel.save()
+                
+                count = demandes_actives.count()
+                return Response({
+                    'status': f'{count} prêt(s) terminé(s)',
+                    'materiels_liberes': count
+                }, status=status.HTTP_200_OK)
+                
+        except Utilisateur.DoesNotExist:
+            return Response(
+                {'error': 'Utilisateur non trouvé'},
+                status=status.HTTP_404_NOT_FOUND
+            )
+        except Exception as e:
+            return Response(
+                {'error': str(e)},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+    @action(detail=False, methods=['post'], url_path='terminer-tous-retard/(?P<user_id>[^/.]+)')
+    def terminer_tous_les_prets(self, request, user_id=None):
+        try:
+            utilisateur = Utilisateur.objects.get(pk=user_id)
+            
+            with transaction.atomic():
+                # Récupérer toutes les demandes actives de l'utilisateur
+                demandes_actives = DemandePret.objects.filter(
+                    demandeur=utilisateur,
+                    etat='En retard'   # ou tout autre état qui signifie "prêt en cours"
+                )
+                # Mettre à jour chaque demande et chaque matériel
+                for demande in demandes_actives:
+                    demande.etat = 'Rendu'
                     demande.save()
                     
                     materiel = demande.materiel
@@ -131,3 +169,12 @@ class UserRegistrationView(generics.CreateAPIView):
                 "role": user.role
             }
         }, status=status.HTTP_201_CREATED)
+
+def mettre_a_jour_etats():
+    demandes = DemandePret.objects.filter(etat='En cours', date_fin__lt=timezone.now())
+    demandes.update(etat='En retard')
+
+@api_view(['POST'])
+def maj_demandes_etat(request):
+    mettre_a_jour_etats()
+    return Response({"message": "Mise à jour terminée."})

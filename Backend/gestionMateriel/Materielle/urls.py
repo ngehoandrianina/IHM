@@ -2,7 +2,7 @@ from django.urls import path, include
 from rest_framework import routers
 from . import views
 from rest_framework_simplejwt.views import TokenRefreshView
-from .views import LoginView, UserInfoView,UserRegistrationView
+from .views import LoginView, UserInfoView,UserRegistrationView,maj_demandes_etat
 
 router = routers.DefaultRouter()
 router.register(r'materiels', views.MaterielViewSet)
@@ -18,4 +18,5 @@ urlpatterns = [
     path('api/auth/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('api/auth/user/', UserInfoView.as_view(), name='user_info'),
     path('api/auth/register/', UserRegistrationView.as_view(), name='register'),
+    path('api/maj-demandes-etat/', maj_demandes_etat, name='maj-demandes-etat'),
 ]
