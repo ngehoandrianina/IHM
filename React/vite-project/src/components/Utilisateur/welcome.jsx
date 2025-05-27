@@ -7,7 +7,7 @@ const welcome = () => {
             <div className='w-full flex flex-col items-center gap-2 h-[250px]' style={{background: `url('/assets/bg-materiel.jpg')`}}>
                 <h1 className='text-gray-800 text-center font-semibold'>IT Inventory and Maintien</h1>
                 
-                <div className="relative w-[450px]">
+                <div className="relative w-[75%]">
                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-evetns-none">
                         <FiSearch className='text-gray-400'/>
                     </div>

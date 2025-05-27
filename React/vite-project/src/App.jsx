@@ -29,7 +29,7 @@ function App() {
                 <Route path='/signup' element={<Signup/>}/>
                 <Route element={<PrivateRoute requiredRole='Technicien' />}>
                 <Route path='/user' element={<Layout />}>
-                    <Route index element={<WelcomePage />} />
+                    <Route path='/user/home' element={<WelcomePage />} />
                     <Route path='/user/materiel' element={<Materiels />} />
                     <Route path='/user/maintenance' element={<Maintenance/>}/>
                     <Route path='/user/apropos' element={<Apropos/>} />
